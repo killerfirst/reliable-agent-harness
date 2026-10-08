@@ -20,10 +20,30 @@
 ## 当前状态
 
 目前正在构建 V0：一个带有手写 Agent 循环和受限工具集的最小化 Coding Agent。
+已构建成功，第一次修复工作区bug通过测试
 
 ## 使用方式
 
 env填入Deepseek key后，终端输入: python main.py "任务描述"
+
+## 项目进行中出现的问题与解决方法
+
+### deepseek api通过WSL当前配置的代理访问时，TLS连接失败
+
+**让DeepSeek绕过代理**
+```
+export NO_PROXY=api.deepseek.com
+export no_proxy=api.deepseek.com
+```
+
+然后检查：
+```
+curl -sS -o /dev/null \
+  -w "HTTP状态码: %{http_code}\n" \
+  --max-time 15 \
+  https://api.deepseek.com
+```
+预期现在得到 `401`，并且不再出现 SSL EOF。
 
 ## 模型说明
 

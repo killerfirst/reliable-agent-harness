@@ -22,10 +22,30 @@ This project explores how an agent harness can procide:
 ## Current Status
 
 Currently building V0: a minimal coding agent with a hard-written loop and retricted tools.
+Build successful, the first fix for the workspace bug has passed testing
 
 ## How to use
 
 After filling in the Deepseek key in the env, enter in the terminal: python main.py "task description".
+
+## Problems and Solutions During the Project
+
+### TLS connection fails when the deepseek API accesses via the currently configured WSL proxy
+
+**Allowing DeepSeek to bypass proxies** 
+```
+export NO_PROXY=api.deepseek.com
+export no_proxy=api.deepseek.com
+```
+
+Then check: 
+```
+curl -sS -o /dev/null  
+-w "HTTP status code: %{http_code}n"  
+--max-time 15  
+https://api.deepseek.com
+```
+Expect to get a '401' and no longer see SSL EOF.
 
 ## Model Provider
 

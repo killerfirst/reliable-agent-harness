@@ -28,7 +28,7 @@ def run_agent(task: str) -> str:
 
     model = os.getenv(
         "DEEPSEEK_MODEL",
-        "deepseek-chat",
+        "deepseek-flash",
     )
 
     messages = [
