@@ -11,63 +11,67 @@ from harness.tools import (
 TOOL_SCHEMAS = [
     {
         "type": "function",
-        "name": "list_files",
-        "description": "List files available in the workspace.",
-        "parameters": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": False,
-        },
-        "strict": True,
-    },
-    {
-        "type": "function",
-        "name": "read_file",
-        "description": "Read a UTF-8 text file from the workspace.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Path relative to the workspace.",
-                }
+        "function": {
+            "name": "list_files",
+            "description": "List files available in the workspace.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": False,
             },
-            "required": ["path"],
-            "additionalProperties": False,
         },
-        "strict": True,
     },
     {
         "type": "function",
-        "name": "replace_text",
-        "description": (
-            "Replace exactly one occurrence of old text "
-            "inside a workspace file."
-        ),
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string"},
-                "old": {"type": "string"},
-                "new": {"type": "string"},
+        "function": {
+            "name": "read_file",
+            "description": "Read a UTF-8 text file from the workspace.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path relative to the workspace.",
+                    }
+                },
+                "required": ["path"],
+                "additionalProperties": False,
             },
-            "required": ["path", "old", "new"],
-            "additionalProperties": False,
         },
-        "strict": True,
     },
     {
         "type": "function",
-        "name": "run_tests",
-        "description": "Run pytest inside the workspace.",
-        "parameters": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": False,
+        "function": {
+            "name": "replace_text",
+            "description": (
+                "Replace exactly one occurrence of old text "
+                "inside a workspace file."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {"type": "string"},
+                    "old": {"type": "string"},
+                    "new": {"type": "string"},
+                },
+                "required": ["path", "old", "new"],
+                "additionalProperties": False,
+            },
         },
-        "strict": True,
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_tests",
+            "description": "Run pytest inside the workspace.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": False,
+            },
+        },
     },
 ]
 
@@ -108,4 +112,3 @@ def execute_tool(name: str, arguments: dict) -> str:
             },
             ensure_ascii=False,
         )
-    

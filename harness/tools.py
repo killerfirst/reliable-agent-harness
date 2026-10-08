@@ -2,7 +2,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-WORKSPACE=Path("workspace").resolve
+WORKSPACE=Path("workspace").resolve()
 
 def safe_path(path:str)-> Path:
     target = (WORKSPACE/ path).resolve()
@@ -25,7 +25,7 @@ def list_files()->str:
 
             files.append(str(path.relative_to(WORKSPACE)))
 
-        return "\n".join(files)
+    return "\n".join(files)
 
 
 def read_file(path:str)->str:
@@ -53,7 +53,7 @@ def replace_text(path: str, old: str, new: str)->str:
         )
     
     target.write_text(
-        content.repalce(old, new, 1),
+        content.replace(old, new, 1),
         encoding = "utf-8"
     )
 

@@ -21,9 +21,29 @@
 
 目前正在构建 V0：一个带有手写 Agent 循环和受限工具集的最小化 Coding Agent。
 
+## 使用方式
+
+env填入Deepseek key后，终端输入: python main.py "任务描述"
+
+## 模型说明
+
+V0 最初调用 OpenAI 的 Responses API。现已迁移到 **DeepSeek**：DeepSeek 兼容 `openai` Python SDK，但不提供 Responses API，因此 Agent 循环改为使用 Chat Completions API。
+
+`.env` 中的配置：
+
+- `DEEPSEEK_API_KEY` — DeepSeek API 密钥
+- `DEEPSEEK_MODEL` — 模型名称，默认 `deepseek-chat`
+
+注意事项：
+
+- `deepseek-chat` 完整支持 function calling，是本 Agent 循环应使用的模型；`deepseek-reasoner` 对工具调用支持有限，不适合本项目。
+- 客户端仍使用 `openai` SDK，仅将 `base_url` 指向 `https://api.deepseek.com`。
+- 工具 schema 使用 Chat Completions 的 function 格式（`{"type": "function", "function": {...}}`）。
+- 本次迁移同时修复了 harness 工具的三处 bug：`WORKSPACE` 路径解析、`list_files` 提前返回、`replace_text` 的拼写错误。
+
 ## 路线图
 
-- [ ] V0 - 最小化 Agent 循环
+- [x] V0 - 最小化 Agent 循环
 - [ ] V1 - 工具注册机制与执行限制
 - [ ] V2 - 验证与重试
 - [ ] V3 - 运行追踪

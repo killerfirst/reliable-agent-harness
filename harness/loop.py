@@ -21,65 +21,67 @@ Rules:
 
 
 def run_agent(task: str) -> str:
-    client = OpenAI()
-
-    model = os.getenv(
-        "OPENAI_MODEL",
-        "gpt-5.6-terra",
+    client = OpenAI(
+        api_key=os.getenv("DEEPSEEK_API_KEY"),
+        base_url="https://api.deepseek.com",
     )
 
-    inputs = [
+    model = os.getenv(
+        "DEEPSEEK_MODEL",
+        "deepseek-chat",
+    )
+
+    messages = [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT,
+        },
         {
             "role": "user",
             "content": task,
-        }
+        },
     ]
 
     for turn in range(1, 9):
         print(f"\n===== TURN {turn} =====")
 
-        response = client.responses.create(
+        response = client.chat.completions.create(
             model=model,
-            instructions=SYSTEM_PROMPT,
+            messages=messages,
             tools=TOOL_SCHEMAS,
-            input=inputs,
         )
 
-        # 把模型这一轮产生的内容加入上下文
-        inputs += response.output
+        message = response.choices[0].message
 
-        tool_calls = [
-            item
-            for item in response.output
-            if item.type == "function_call"
-        ]
+        # 把模型这一轮产生的内容加入上下文
+        messages.append(message)
 
         # 模型没有继续调用工具：
         # 当前 V0 直接相信它已经结束
-        if not tool_calls:
+        if not message.tool_calls:
             print("\n===== FINAL =====")
-            print(response.output_text)
+            print(message.content)
 
-            return response.output_text
+            return message.content
 
-        for call in tool_calls:
-            arguments = json.loads(call.arguments)
+        for call in message.tool_calls:
+            arguments = json.loads(call.function.arguments)
 
-            print(f"\nTOOL: {call.name}")
+            print(f"\nTOOL: {call.function.name}")
             print(f"ARGS: {arguments}")
 
             result = execute_tool(
-                call.name,
+                call.function.name,
                 arguments,
             )
 
             print(f"RESULT:\n{result[:2000]}")
 
-            inputs.append(
+            messages.append(
                 {
-                    "type": "function_call_output",
-                    "call_id": call.call_id,
-                    "output": result,
+                    "role": "tool",
+                    "tool_call_id": call.id,
+                    "content": result,
                 }
             )
 
